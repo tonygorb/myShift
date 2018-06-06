@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">myShift</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="שם_מקום_עבודה">שם מקום עבודה</string>
+    <string name="שכר_שעתי">שכר שעתי</string>
+    <string name="hourly_rate_icon">hourly rate icon</string>
+    <string name="_32">32</string>
+    <string name="שעות_נוספות">שעות נוספות</string>
+    <string name="more_hours_icon">more hours icon</string>
+    <string name="הפסקות">הפסקות</string>
+    <string name="breaks_icon">breaks icon</string>
+    <string name="weekly_rate_icon">weekly rate icon</string>
+    <string name="תעריף_עפי_ימים">תעריף עפ״י ימים</string>
+    <string name="הצג">הצג</string>
+    <string name="כתובת_מקום_העבודה">כתובת מקום העבודה</string>
+    <string name="דוגמה_לכתובת">אורלוב 35 פתח תקווה</string>
+    <string name="job_address_icon">job address icon</string>
+    <string name="שמור">שמור</string>
+    <string name="תאריך_לא_אמיתי">,מרץ 2018</string>
+    <string name="חץ_שמאל"><![CDATA[<]]></string>
+    <string name="חץ_ימין"><![CDATA[>]]></string>
+    <string name="הסר">-</string>
+    <string name="הוסף">+</string>
+    <string name="סהכ_שקלים">סה״כ שקלים</string>
+    <string name="שכר_לא_אמיתי">1,440.43</string>
+    <string name="סהכ_שעות">סה״כ שעות</string>
+    <string name="שעות_לא_אמיתיות">45</string>
+    <string name="שעה_לא_אמיתית">14:08</string>
+    <string name="משמרת_יום">משמרת יום</string>
+    <string name="day_shift_icon">day_shift_icon</string>
+    <string name="טיימר_לא_אמיתי">00:00</string>
+    <string name="משמרת_לילה">משמרת לילה</string>
+</resources>
