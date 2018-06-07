@@ -1,5 +1,6 @@
 package myshift.com;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,28 +25,28 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
 
-
-    private SignInButton mGoogleBtn;
-
-    private static final int RC_SIGN_IN = 1;
-
-    private GoogleApiClient mGoogleApiClient;
-
+    private static final String TAG = "LoginActivity";
+    private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
 
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private static final String TAG = "Login_Activity";
-
     private Button guestLogin;
+
+    private SignInButton mGoogleBtn;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+
+        // Authentication Listener (Cheking if user is logged in or not and display the right activity).
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -54,15 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-        mGoogleBtn = (SignInButton) findViewById(R.id.googleBtn);
+
+        mGoogleBtn = findViewById(R.id.googleBtn);
+        mGoogleBtn.setOnClickListener(this);
 
         guestLogin = findViewById(R.id.btnGuestLogin);
-        guestLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signInAnonymously();
-            }
-        });
+        guestLogin.setOnClickListener(this);
+
+        progressDialog = new ProgressDialog(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -80,14 +80,6 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        mGoogleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-
-            }
-        });
     }
 
 
@@ -128,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         // [END signin_anonymously]
     }
 
+
     private void updateUI(FirebaseUser user) {
         boolean isSignedIn = (user != null);
 
@@ -151,7 +144,8 @@ public class LoginActivity extends AppCompatActivity {
             if (result.isSuccess()){
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-            }else {
+            }
+            else {
 
             }
         }
@@ -174,5 +168,29 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnGuestLogin:
+                guestLogin.setClickable(false);
+                mGoogleBtn.setClickable(false);
+                signInAnonymously();
+                break;
+
+            case R.id.googleBtn:
+                guestLogin.setClickable(false);
+                mGoogleBtn.setClickable(false);
+                progressDialog.setMessage("מתחבר..");
+                progressDialog.show();
+                signIn();
+                break;
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult);
     }
 }
