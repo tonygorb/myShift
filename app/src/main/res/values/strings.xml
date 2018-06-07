@@ -34,4 +34,27 @@
     <string name="day_shift_icon">day_shift_icon</string>
     <string name="טיימר_לא_אמיתי">00:00</string>
     <string name="משמרת_לילה">משמרת לילה</string>
+
+    <string-array name="bonusHours">
+        <item>לא לחשב</item>
+        <item>לאחר 7 שעות</item>
+        <item>לאחר 7.5 שעות</item>
+        <item>לאחר 8 שעות</item>
+        <item>לאחר 8.5 שעות</item>
+        <item>לאחר 9 שעות</item>
+    </string-array>
+
+    <string-array name="breaks">
+        <item>לא לחשב</item>
+        <item>15 דקות</item>
+        <item>20 דקות</item>
+        <item>25 דקות</item>
+        <item>30 דקות</item>
+        <item>35 דקות</item>
+        <item>40 דקות</item>
+        <item>45 דקות</item>
+        <item>50 דקות</item>
+        <item>55 דקות</item>
+        <item>60 דקות</item>
+    </string-array>
 </resources>
