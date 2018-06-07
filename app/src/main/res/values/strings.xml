@@ -57,4 +57,11 @@
         <item>55 דקות</item>
         <item>60 דקות</item>
     </string-array>
+
+    <string-array name="weeklyRate">
+        <item>100%</item>
+        <item>125%</item>
+        <item>150%</item>
+        <item>200%</item>
+    </string-array>
 </resources>

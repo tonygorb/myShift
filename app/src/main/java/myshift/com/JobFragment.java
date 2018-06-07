@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 public class JobFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private Spinner spnrBonusHours, spnrBreaks;
+    private TextView showWeeklyRate;
 
     private static final String TAG = "JobFragment";
 
@@ -37,6 +39,18 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
         ArrayAdapter breaksAdapter = ArrayAdapter.createFromResource(getContext(),R.array.breaks,android.R.layout.simple_spinner_item);
         spnrBreaks.setAdapter(breaksAdapter);
         spnrBreaks.setOnItemSelectedListener(this);
+
+        showWeeklyRate = view.findViewById(R.id.tv_show_weekly_rate);
+        showWeeklyRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new WeeklyRateFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.job_layout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         return view;
     }
