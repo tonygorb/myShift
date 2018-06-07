@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.Locale;
 
 public class CurrentShiftDayFragment extends Fragment {
 
-    private static final String TAG = "CurrentShiftFragment";
+    private static final String TAG = "CurrentShiftDayFragment";
 
     private TextView tvTime, tvDate, btnSwitch;
     private SimpleDateFormat mSimpleDateFormatTime;
@@ -53,11 +54,11 @@ public class CurrentShiftDayFragment extends Fragment {
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Fragment fragment = new CurrentShiftNightFragment();
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                transaction.replace(R.id.day_shift_layout, fragment);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
+                Fragment fragment = new CurrentShiftNightFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.day_shift_layout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
@@ -65,9 +66,18 @@ public class CurrentShiftDayFragment extends Fragment {
             @Override
             public boolean onLongClick(View view) {
                 chronometer(view);
+
+                if (running){
+                    btnSwitch.setEnabled(false);
+                    running = true;
+                } else {
+                    btnSwitch.setEnabled(true);
+                    running = false;
+                }
                 return true;
             }
         });
+
 
         return view;
     }
