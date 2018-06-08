@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -105,10 +107,23 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     @Override
+    // When [BACK BUTTON] pressed //
     public void onBackPressed() {
-        Intent finish = new Intent(Intent.ACTION_MAIN);
-        finish.addCategory(Intent.CATEGORY_HOME);
-        finish.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(finish);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // if any [FRAGMENT] is open, back button will come back for it's previous fragment
+        if (fragmentManager.getBackStackEntryCount() > 0){
+            Log.i("Main Activity" , "popping backstack");
+            fragmentManager.popBackStack();
+        }
+        // if no [FRAGMENT] is open, back button will close the app
+        else {
+            Log.i("Main Activity","nothing on backstack, calling super");
+
+            Intent finish = new Intent(Intent.ACTION_MAIN);
+            finish.addCategory(Intent.CATEGORY_HOME);
+            finish.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(finish);
+        }
     }
 }

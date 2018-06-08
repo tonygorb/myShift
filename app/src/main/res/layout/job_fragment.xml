@@ -27,27 +27,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
             <EditText
-                android:id="@+id/job_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/et_job_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="@string/שם_מקום_עבודה"
-                android:textAlignment="center"
+                android:hint="@string/שם_מקום_עבודה"
+                android:inputType="text"
                 android:textColor="@android:color/white"
                 android:textSize="26sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="LabelFor" />
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
@@ -100,17 +96,28 @@
 
                 <EditText
                     android:id="@+id/et_hourly_rate"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:ems="10"
                     android:hint="@string/_32"
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_currency"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="ש״ח"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -155,6 +162,19 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.6" />
 
+                <TextView
+                    android:id="@+id/tv_after"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="לאחר"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/et_bonus_hours"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.538" />
+
                 <ImageView
                     android:id="@+id/ic_bonus_hours"
                     android:layout_width="wrap_content"
@@ -168,16 +188,32 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/btn_star" />
 
-                <Spinner
-                    android:id="@+id/spnr_bonus_hours"
+                <TextView
+                    android:id="@+id/tv_hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:gravity="fill"
+                    android:text="שעות"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/et_bonus_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/transparent"
+                    android:hint="8.36"
+                    android:inputType="numberDecimal"
+                    android:maxLength="4"
+                    android:textColor="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_hours"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
@@ -220,14 +256,30 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/btn_star" />
 
-                <Spinner
-                    android:id="@+id/spnr_breaks"
+                <EditText
+                    android:id="@+id/et_breaks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/transparent"
+                    android:hint="30"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textColor="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_minutes"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:gravity="fill"
+                    android:text="דקות"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -275,17 +327,15 @@
                 <TextView
                     android:id="@+id/tv_show_weekly_rate"
                     android:layout_width="wrap_content"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:text="@string/הצג"
-                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.518" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -318,17 +368,18 @@
                     app:layout_constraintVertical_bias="0.6" />
 
                 <EditText
+                    android:gravity="left"
                     android:id="@+id/et_job_address"
-                    android:layout_width="136dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:ems="10"
+                    android:focusable="true"
                     android:hint="@string/דוגמה_לכתובת"
-                    android:inputType="number"
-                    android:textAlignment="center"
+                    android:inputType="text"
+                    android:textColor="@color/colorWhite"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
