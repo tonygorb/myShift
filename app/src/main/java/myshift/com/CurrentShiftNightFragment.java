@@ -1,7 +1,6 @@
 package myshift.com;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,70 +11,83 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class CurrentShiftNightFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "CurrentShiftNightFragment";
-    private TextView newShiftDate, startTime, endTime, totalHours,currentTime;
-    private Button startShiftButton , btnSwitch;
-    private Calendar calendar, startCalendar, endCalendar;
-    private SimpleDateFormat simpleDateFormat, simpleTimeFormat , simpleCurrentTimeFormat;
-    private boolean isStartedShift = true;
-    public static String shiftDate, shiftStartTime, shiftEndTime;
 
+    private FirebaseAuth mAuth;
+    private String user;
+    private DatabaseReference current_user_db, db_start_time, db_end_time, db_total_time;
+
+    private TextView tvTime, tvDate, btnSwitch, startTime, endTime, totalHours;
+    private Button startShiftButton;
+    private SimpleDateFormat mSimpleDateFormatTime, simpleTimeFormat;
+    private Calendar mCalendar, startCalendar, endCalendar;
+    private String time, date;
+    private Chronometer mChronometer;
+    private static String shiftDate, shiftStartTime, shiftEndTime;
+
+    private boolean running = true;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.current_shift_night_fragment,container,false);
 
-        newShiftDate =  view.findViewById(R.id.startDateTV);
-        startTime = view.findViewById(R.id.startTimeTV);
-        endTime = view.findViewById(R.id.endTimeTV);
-        totalHours = view.findViewById(R.id.total);
-        currentTime = view.findViewById(R.id.currentTime);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser().getUid();
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("Shift Records");
 
-        startShiftButton = view.findViewById(R.id.startShiftButton);
+        tvTime = view.findViewById(R.id.night_time);
+        tvDate = view.findViewById(R.id.night_date);
+        btnSwitch = view.findViewById(R.id.night_tv_shift);
 
-        calendar = Calendar.getInstance();
-        simpleDateFormat = new SimpleDateFormat("dd/MM/yy");
-        simpleTimeFormat = new SimpleDateFormat("HH:mm:ss a");
-        simpleCurrentTimeFormat = new SimpleDateFormat("HH:mm:ss");
-        shiftDate = simpleDateFormat.format(calendar.getTime());
-        currentTime.setText(simpleCurrentTimeFormat.format(calendar.getTime()));
+        mChronometer = view.findViewById(R.id.night_chronometer);
+        startShiftButton = view.findViewById(R.id.night_startShiftButton);
+        startTime = view.findViewById(R.id.night_startTimeTV);
+        endTime = view.findViewById(R.id.night_endTimeTV);
+        totalHours = view.findViewById(R.id.night_total);
+        mCalendar = Calendar.getInstance();
+        mSimpleDateFormatTime = new SimpleDateFormat("HH:mm");
+        simpleTimeFormat = new SimpleDateFormat("HH:mm:ss");
+        time = mSimpleDateFormatTime.format(mCalendar.getTime());
 
-        newShiftDate.setText(shiftDate);
+        date = new SimpleDateFormat("MMM ,yyyy", Locale.getDefault()).format(new Date());
 
-
-
-        startShiftButton.setOnClickListener(this);
-
+        tvTime.setText(time);
+        tvDate.setText(date);
 
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new CurrentShiftDayFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.night_shift_layout, fragment);
+                transaction.replace(R.id.night_layout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
 
-
+        startShiftButton.setOnClickListener(this);
 
         return view;
     }
 
-    public void calculatedHours() throws ParseException {
+    private void calculatedHours() {
         Date startShift = null;
         Date endShift = null;
 
@@ -94,32 +106,52 @@ public class CurrentShiftNightFragment extends Fragment implements View.OnClickL
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
+    @Override
     public void onClick(View v) {
-        if (isStartedShift){
+        if (running){
             startCalendar = Calendar.getInstance();
             shiftStartTime = simpleTimeFormat.format(startCalendar.getTime());
             startTime.setText(shiftStartTime);
             startShiftButton.setText("STOP");
-            isStartedShift = false;
+
+            mChronometer.setBase(SystemClock.elapsedRealtime());
+            mChronometer.start();
+
+            running = false;
             return;
         }
 
-        if (!isStartedShift ) {
+        if (!running ) {
             endCalendar = Calendar.getInstance();
             shiftEndTime = simpleTimeFormat.format(endCalendar.getTime());
             endTime.setText(shiftEndTime);
             startShiftButton.setText("START");
             try {
                 calculatedHours();
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            String sCurrentDate = mCalendar.getTime().toString();
+            String sStartTime = startTime.getText().toString();
+            String sEndTime = endTime.getText().toString();
+            String sTotalTime = totalHours.getText().toString();
+
+            Map newPost = new HashMap();
+            newPost.put("תאריך", sCurrentDate);
+            newPost.put("שעת כניסה", sStartTime);
+            newPost.put("שעת יציאה",sEndTime);
+            newPost.put("סה״כ משמרת",sTotalTime);
+
+            current_user_db.push().setValue(newPost);
+
+            mChronometer.stop();
+
+            running = true;
+            return;
         }
     }
-
 }
 

@@ -34,6 +34,8 @@ import java.util.Map;
 
 public class JobFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = "JobFragment";
+
     private FirebaseAuth mAuth;
     private String user;
     private EditText jobName, hourlyRate, bonusHours, breaks, jobAddress;
@@ -42,7 +44,6 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
 
     private DatabaseReference current_user_db, db_job_name, db_hourly_rate, db_bonus_hours, db_breaks, db_job_address;
 
-    private static final String TAG = "JobFragment";
 
     @Nullable
     @Override
