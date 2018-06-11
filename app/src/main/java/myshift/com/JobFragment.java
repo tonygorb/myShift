@@ -48,72 +48,8 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
 
-        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences");
+        current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("UserPref");
 
-        db_job_name = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences").child("שם העבודה");
-        db_job_name.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                jobName.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db_hourly_rate = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences").child("שכר שעתי");
-        db_hourly_rate.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                hourlyRate.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db_bonus_hours = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences").child("שעות נוספות");
-        db_bonus_hours.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                bonusHours.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db_breaks = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences").child("הפסקות");
-        db_breaks.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                breaks.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        db_job_address = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences").child("כתובת העבודה");
-        db_job_address.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                jobAddress.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         jobName = view.findViewById(R.id.et_job_name);
         hourlyRate = view.findViewById(R.id.et_hourly_rate);
@@ -147,17 +83,19 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
                 UserPrefFb userPrefFb = new UserPrefFb();
 
 
-                userPrefFb.hourlyRate = Integer.parseInt(hRate);
                 userPrefFb.breaks = Integer.parseInt(user_breaks);
                 userPrefFb.bonusHours = Float.parseFloat(bHours);
                 userPrefFb.jobName = jName;
                 userPrefFb.jobAddress = jAddress;
+                userPrefFb.hourlyRate = Float.parseFloat(hRate);
 
                 Log.e(TAG, "rate=" + userPrefFb.hourlyRate);
                 Log.e(TAG, "HRATE=" + hRate);
 
+                //because u r setting an object here,
+                //in here we r not adding a child to a parent. parent itself is an object
 
-                current_user_db.push().setValue(userPrefFb);
+                current_user_db.setValue(userPrefFb);
             }
 
         });
@@ -165,6 +103,7 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
 
         return view;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

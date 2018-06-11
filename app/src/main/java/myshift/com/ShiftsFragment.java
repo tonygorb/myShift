@@ -43,9 +43,6 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
 
     UserPrefFb userPref;
 
-//    hourlyRate * totalHours =
-
-
     String dateTime = new SimpleDateFormat("MMM ,yyyy", Locale.forLanguageTag("he")).format(new Date());
 
     private Button prev, next, add, delete;
@@ -88,33 +85,39 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
 
     public void updateShifts() {
 
-        Log.e(TAG, "UPDATING");
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String user = mAuth.getCurrentUser().getUid();
 
         shiftRecordsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("Shift Records");
 
-        DatabaseReference prefsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("User Preferences");
+        DatabaseReference prefsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("UserPref");
 
         prefsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    userPref = ds.getValue(UserPrefFb.class);
+                //now its object in firebase
+                //so we need to accept it is an object not an array
 
-                    if (userPref != null) {
 
-                        readShifts();
-                    } else {
-                        Log.e(TAG, "null pref");
-                    }
+                userPref = dataSnapshot.getValue(UserPrefFb.class);
 
-                    break;
+                if (userPref != null) {
 
+                    readShifts();
+                } else {
+
+
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+
+                    Log.e(TAG, "null PREF");
                 }
+
+//                    break;
+
+//                }
             }
 
             @Override
@@ -139,8 +142,6 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
 
                 }
 
-                Log.e(TAG, "shifts size=" + shiftRecords.size());
-
                 populateListView(shiftRecords);
 
             }
@@ -158,8 +159,6 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
 
         adapter.list = shiftRecords;
         adapter.notifyDataSetChanged();
-
-        Log.e(TAG, "adapter list size=" + adapter.list.size());
 
     }
 
@@ -186,7 +185,6 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
             totalDailyTV = v.findViewById(R.id.list_totalDaily);
         }
 
-
     }
 
     class ShiftAdapter extends RecyclerView.Adapter<VH> {
@@ -210,38 +208,24 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
 
             holder.dayTV.setText(sr.dateStr);//u can set the rest here
 
-//            Log.e(TAG, "hourlRate=" + userPref.hourlyRate);
-//            Log.e(TAG, "totalMillis=" + sr.totalMillis);
 
             float rate = 0f;
             try {
-                Log.e(TAG, "milis=" + sr.totalMillis);
 
                 float second = (sr.totalMillis * 1.0f) / 1000f;
 
                 float minute = second / (60.0f);
-                Log.e(TAG, "minute=" + minute);
 
                 float hour = minute / (60f);
-                Log.e(TAG, "hour=" + hour);
 
 
                 rate = userPref.hourlyRate * hour;
-
-                Log.e(TAG, "rate=" + rate);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            //here search google
-            //format the float
-            //format decimal part of float
-
-            holder.totalDailyTV.setText(String.format("%.2f",rate));
-
-//            holder.jobNameTV.setText(sr.);
-
+            holder.totalDailyTV.setText(String.format("%.2f", rate));
 
         }
 
