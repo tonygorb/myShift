@@ -134,18 +134,13 @@ public class CurrentShiftNightFragment extends Fragment implements View.OnClickL
                 e.printStackTrace();
             }
 
-            String sCurrentDate = mCalendar.getTime().toString();
-            String sStartTime = startTime.getText().toString();
-            String sEndTime = endTime.getText().toString();
-            String sTotalTime = totalHours.getText().toString();
+            ShiftRecord sr = new ShiftRecord();
+            sr.dateStr = mCalendar.getTime().toString();
+            sr.startDate = startTime.getText().toString();
+            sr.endDate = endTime.getText().toString();
+//            sr.totalMillis = totalHours.getText().toString();
 
-            Map newPost = new HashMap();
-            newPost.put("תאריך", sCurrentDate);
-            newPost.put("שעת כניסה", sStartTime);
-            newPost.put("שעת יציאה",sEndTime);
-            newPost.put("סה״כ משמרת",sTotalTime);
-
-            current_user_db.push().setValue(newPost);
+            current_user_db.push().setValue(sr);
 
             mChronometer.stop();
 

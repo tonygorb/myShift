@@ -1,36 +1,27 @@
 package myshift.com;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class JobFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -38,7 +29,11 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
 
     private FirebaseAuth mAuth;
     private String user;
-    private EditText jobName, hourlyRate, bonusHours, breaks, jobAddress;
+    private EditText jobName;
+    private EditText hourlyRate;
+    private EditText bonusHours;
+    private EditText breaks;
+    private EditText jobAddress;
     private TextView showWeeklyRate;
     private Button btnSave;
 
@@ -48,7 +43,7 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.job_fragment,container,false);
+        View view = inflater.inflate(R.layout.job_fragment, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
@@ -149,14 +144,20 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
                 String user_breaks = breaks.getText().toString();
                 String jAddress = jobAddress.getText().toString();
 
-                Map newPost = new HashMap();
-                newPost.put("שם העבודה", jName);
-                newPost.put("שכר שעתי",hRate);
-                newPost.put("שעות נוספות",bHours);
-                newPost.put("הפסקות",user_breaks);
-                newPost.put("כתובת העבודה",jAddress);
+                UserPrefFb userPrefFb = new UserPrefFb();
 
-                current_user_db.setValue(newPost);
+
+                userPrefFb.hourlyRate = Integer.parseInt(hRate);
+                userPrefFb.breaks = Integer.parseInt(user_breaks);
+                userPrefFb.bonusHours = Float.parseFloat(bHours);
+                userPrefFb.jobName = jName;
+                userPrefFb.jobAddress = jAddress;
+
+                Log.e(TAG, "rate=" + userPrefFb.hourlyRate);
+                Log.e(TAG, "HRATE=" + hRate);
+
+
+                current_user_db.push().setValue(userPrefFb);
             }
 
         });

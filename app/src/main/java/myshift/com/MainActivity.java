@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity  {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null){
-                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                if (firebaseAuth.getCurrentUser() == null) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
             }
         };
@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-    private void setupViewPager(ViewPager viewPager){
+    private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new JobFragment(),"עבודה");
-        adapter.addFragment(new CurrentShiftDayFragment(),"משמרת נוכחית");
-        adapter.addFragment(new ShiftsFragment(),"משמרות");
+        adapter.addFragment(new JobFragment(), "עבודה");
+        adapter.addFragment(new CurrentShiftDayFragment(), "משמרת נוכחית");
+        adapter.addFragment(ShiftsFragment.getInstance(), "משמרות");
         viewPager.setAdapter(adapter);
     }
 
@@ -87,11 +87,11 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logOutBtn:
                 FirebaseAuth.getInstance().signOut();
                 finish();
-                startActivity(new Intent(this,LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
 
                 break;
         }
@@ -112,13 +112,13 @@ public class MainActivity extends AppCompatActivity  {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         // if any [FRAGMENT] is open, back button will come back for it's previous fragment
-        if (fragmentManager.getBackStackEntryCount() > 0){
-            Log.i("Main Activity" , "popping backstack");
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            Log.i("Main Activity", "popping backstack");
             fragmentManager.popBackStack();
         }
         // if no [FRAGMENT] is open, back button will close the app
         else {
-            Log.i("Main Activity","nothing on backstack, calling super");
+            Log.i("Main Activity", "nothing on backstack, calling super");
 
             Intent finish = new Intent(Intent.ACTION_MAIN);
             finish.addCategory(Intent.CATEGORY_HOME);

@@ -158,6 +158,13 @@ public class WeeklyRateFragment extends Fragment implements AdapterView.OnItemSe
         });
     }
 
+    private void readDay(int index){
+
+        ArrayList<Integer> days=new ArrayList<>();
+        days.get(index);
+
+    }
+
     private void readMonday() {
 
     }

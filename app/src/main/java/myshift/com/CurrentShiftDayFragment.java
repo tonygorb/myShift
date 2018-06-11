@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,14 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class CurrentShiftDayFragment extends Fragment implements View.OnClickListener {
 
@@ -47,7 +44,7 @@ public class CurrentShiftDayFragment extends Fragment implements View.OnClickLis
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.current_shift_day_fragment,container,false);
+        View view = inflater.inflate(R.layout.current_shift_day_fragment, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser().getUid();
@@ -89,31 +86,9 @@ public class CurrentShiftDayFragment extends Fragment implements View.OnClickLis
         return view;
     }
 
-    private void calculatedHours() {
-        Date startShift = null;
-        Date endShift = null;
-
-        try {
-            startShift = simpleTimeFormat.parse(shiftStartTime);
-            endShift = simpleTimeFormat.parse(shiftEndTime);
-
-            long diff = endShift.getTime() - startShift.getTime();
-
-            long diffSeconds = diff / 1000 % 60;
-            long diffMinutes = diff / (60 * 1000) % 60;
-            long diffHours = diff / (60 * 60 * 1000) % 24;
-
-            totalHours.setText(diffHours + ":" + diffMinutes + ":" + diffSeconds);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
     public void onClick(View v) {
-        if (running){
+        if (running) {
             startCalendar = Calendar.getInstance();
             shiftStartTime = simpleTimeFormat.format(startCalendar.getTime());
             startTime.setText(shiftStartTime);
@@ -126,31 +101,47 @@ public class CurrentShiftDayFragment extends Fragment implements View.OnClickLis
             return;
         }
 
-        if (!running ) {
+        if (!running) {
             endCalendar = Calendar.getInstance();
             shiftEndTime = simpleTimeFormat.format(endCalendar.getTime());
             endTime.setText(shiftEndTime);
             startShiftButton.setText("START");
+
+            Date startShift = null;
+            Date endShift = null;
+
+            long difMillis = 0;
+
             try {
-                calculatedHours();
+                startShift = simpleTimeFormat.parse(shiftStartTime);
+                endShift = simpleTimeFormat.parse(shiftEndTime);
+
+                long diff = endShift.getTime() - startShift.getTime();
+
+                long diffSeconds = diff / 1000 % 60;
+                long diffMinutes = diff / (60 * 1000) % 60;
+                long diffHours = diff / (60 * 60 * 1000) % 24;
+
+                difMillis = endShift.getTime() - startShift.getTime();
+
+                totalHours.setText(diffHours + ":" + diffMinutes + ":" + diffSeconds);
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            String sCurrentDate = mCalendar.getTime().toString();
-            String sStartTime = startTime.getText().toString();
-            String sEndTime = endTime.getText().toString();
-            String sTotalTime = totalHours.getText().toString();
+            ShiftRecord sr = new ShiftRecord();
+            sr.dateStr = mCalendar.getTime().toString();
+            sr.startDate = startTime.getText().toString();
+            sr.endDate = endTime.getText().toString();
+            sr.totalMillis = difMillis;
 
-            Map newPost = new HashMap();
-            newPost.put("תאריך", sCurrentDate);
-            newPost.put("שעת כניסה", sStartTime);
-            newPost.put("שעת יציאה",sEndTime);
-            newPost.put("סה״כ משמרת",sTotalTime);
-
-            current_user_db.push().setValue(newPost);
+            current_user_db.push().setValue(sr);
 
             mChronometer.stop();
+
+            ShiftsFragment.getInstance().updateShifts();
 
             running = true;
             return;
