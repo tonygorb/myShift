@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -237,8 +238,7 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
             //format the float
             //format decimal part of float
 
-
-            holder.totalDailyTV.setText(String.valueOf(rate));
+            holder.totalDailyTV.setText(String.format("%.2f",rate));
 
 //            holder.jobNameTV.setText(sr.);
 
