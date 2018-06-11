@@ -109,15 +109,8 @@ public class ShiftsFragment extends Fragment implements View.OnClickListener {
                 } else {
 
 
-//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
-
                     Log.e(TAG, "null PREF");
                 }
-
-//                    break;
-
-//                }
             }
 
             @Override

@@ -92,9 +92,6 @@ public class JobFragment extends Fragment implements AdapterView.OnItemSelectedL
                 Log.e(TAG, "rate=" + userPrefFb.hourlyRate);
                 Log.e(TAG, "HRATE=" + hRate);
 
-                //because u r setting an object here,
-                //in here we r not adding a child to a parent. parent itself is an object
-
                 current_user_db.setValue(userPrefFb);
             }
 
